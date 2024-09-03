@@ -1,4 +1,5 @@
 import numpy as np
+import json
 
 def calcula_faturamento(faturamento):
     # Remover dias sem faturamento
@@ -25,7 +26,17 @@ def calcula_faturamento(faturamento):
     print(f"Número de dias com faturamento acima da média: {faturamento_superior}")
     print()
 
-# Gera um array de faturamento diário aleatório
-faturamento = np.random.randint(0, 10000, size=30)
 
-calcula_faturamento(faturamento)
+def main():
+    # Ler o arquivo JSON
+    with open('faturamentos.json', 'r') as file:
+        data = json.load(file)
+    
+    # Extrair o vetor de faturamento
+    faturamento = np.array(data['faturamento'])
+    
+    # Calcular e imprimir os resultados
+    calcula_faturamento(faturamento)
+
+if __name__ == "__main__":
+    main()
