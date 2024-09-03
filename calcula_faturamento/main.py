@@ -1,42 +1,26 @@
-import numpy as np
 import json
+import numpy as np
+import os
 
-def calcula_faturamento(faturamento):
-    # Remover dias sem faturamento
-    faturamento_validos = faturamento[faturamento > 0]
+def calcular_faturamento(dados):
+    faturamentos = np.array([dia["valor"] for dia in dados])
+    faturamentos_validos = faturamentos[faturamentos > 0]
 
-    # Pega o valor minimo dos faturamentos
-    min_faturamento = np.min(faturamento_validos)
+    menor_faturamento = np.min(faturamentos_validos)
+    maior_faturamento = np.max(faturamentos_validos)
+    media_faturamento = np.mean(faturamentos_validos)
+    dias_acima_media = np.sum(faturamentos_validos > media_faturamento)
 
-    # Pega o valor máximo dos faturamentos
-    max_faturamento = np.max(faturamento_validos)
+    print(f"Menor valor de faturamento: R$ {menor_faturamento:.2f}")
+    print(f"Maior valor de faturamento: R$ {maior_faturamento:.2f}")
+    print(f"Número de dias com faturamento acima da média: {dias_acima_media}")
 
-    # Pega a média dos faturamentos
-    media = np.mean(faturamento_validos)
+# Verifica se o arquivo existe
+file_path = 'dados.json'
 
-    # Número de dias com faturamento superior à média mensal
-    faturamento_superior = np.sum(faturamento_validos > media)
-
-    # Printando os resultados dentro da função
-    print()
-    print(f"Faturamentos diário: {faturamento}\n")
-  
-    print(f"Menor valor de faturamento: {min_faturamento:.2f}")
-    print(f"Maior valor de faturamento: {max_faturamento:.2f}")
-    print(f"Número de dias com faturamento acima da média: {faturamento_superior}")
-    print()
-
-
-def main():
-    # Ler o arquivo JSON
-    with open('faturamentos.json', 'r') as file:
-        data = json.load(file)
-    
-    # Extrair o vetor de faturamento
-    faturamento = np.array(data['faturamento'])
-    
-    # Calcular e imprimir os resultados
-    calcula_faturamento(faturamento)
-
-if __name__ == "__main__":
-    main()
+if os.path.exists(file_path):
+    with open(file_path, 'r') as file:
+        dados = json.load(file)
+    calcular_faturamento(dados)
+else:
+    print(f"Erro: Arquivo '{file_path}' não encontrado. Verifique o caminho e o nome do arquivo.")
